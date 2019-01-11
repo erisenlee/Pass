@@ -61,8 +61,9 @@ class Account(BaseInfoModel):
     def __str__(self):
         return self.name
 
-    def __repr__(self):
-        return '{} {}'.format(self.__class__, self.name)
+    def display_tag(self):
+
+        return ', '.join([tag.name for tag in self.tags.all()])
 
 
 class Tag(BaseInfoModel):

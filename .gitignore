@@ -1,5 +1,7 @@
 venv/
-__pycache__/
 .vscode/
 migrations/
 .idea/
+__pycache__/
+*.py[cod]
+*$py.class

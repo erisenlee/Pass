@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'django.contrib.postgres',
     'awesome',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [

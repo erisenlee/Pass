@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login
-
+from django.urls import reverse
 from django.http import HttpResponse
 from .forms import LoginForm
 from django.core.mail import EmailMessage
@@ -8,19 +8,23 @@ from django.template.loader import get_template
 from django.core.signing import TimestampSigner
 
 # Create your views here.
-def send_mail(request,user):
+def send_mail(user):
     subject = 'Import Info'
 
-    context = {
-        'host': request.host,
-        
-    }
+    # context = {
+    #     'host': request.host,
+    #
+    # }
     html_content = get_template('accounts/message.html').render({'user':user})
     fromemal = 'lm.liu@fengniaojx.com'
     to = ['abnormalboy@126.com']
     msg = EmailMessage(subject, html_content, fromemal, to)
     msg.content_subtype = 'html'
     msg.send()
+
+
+def index(request):
+    return redirect(reverse('accounts:log_in'))
 
 
 

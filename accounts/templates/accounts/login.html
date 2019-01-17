@@ -6,9 +6,7 @@
     <style>
         .main {
             margin-top: 200px;
-            padding: 25px;
-            {#border: #666666 solid 1px;#}
-            box-shadow: 1px 1px 3px rgba(0,0,0,1);
+        {#padding: 25px;#} box-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
         }
     </style>
 {% endblock %}
@@ -23,53 +21,47 @@
 
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <div class="main">
-                    <form action="{% url 'accounts:log_in' %}" method="post" role="form">
-                        {% csrf_token %}
-                        {% if user.is_authenticated %}
-                            <div class="alert alert-success">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                                </button>
-                                <strong>Login success!</strong> Hello, {{ user.username }}
-                            </div>
 
-                        {% endif %}
-                        {% if form.username.errors %}
-                            <div class="alert alert-danger">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                                </button>
-                                 {{ form.username.errors|join:"," }}
-                            </div>
-{#                            <ol>#}
-{#                                {% for error in form.username.errors %}#}
-{#                                    <li>#}
-{#                                        <strong>{{ error|escape }}</strong>#}
-{#                                    </li>#}
-{#                                {% endfor %}#}
-{##}
-{#                            </ol>#}
-                        {% endif %}
-                        <div class="form-group">
-                            <label for="">{{ form.username.label }}</label>
-                            {{ form.username }}
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h4>Welcome | Sign In</h4>
                         </div>
-                        {% if form.password.errors %}
-                            <ol>
-                                {% for error in form.password.errors %}
-                                    <li>
-                                        <strong>{{ error|escape }}</strong>
-                                    </li>
-                                {% endfor %}
+                        <div class="card-body">
 
-                            </ol>
-                        {% endif %}
-                        <div class="form-group">
-                            <label for="">{{ form.password.label }}</label>
-                            {{ form.password }}
+                            <p class="card-text">
+                                {% if form.username.errors %}
+                                    <div class="alert alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                                            &times;
+                                        </button>
+                                        {{ form.username.errors|join:"," }}
+                                    </div>
+                                {% endif %}
+                            </p>
+                            <form action="{% url 'accounts:log_in' %}" method="post" role="form">
+                                {% csrf_token %}
+
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-user" style="font-size:36px"></i></span>
+                                    </div>
+
+                                    {{ form.username }}
+                                </div>
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-lock" style="font-size:36px"></i></span>
+                                    </div>
+
+                                    {{ form.password }}
+                                </div>
+
+
+
+                                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            </form>
                         </div>
-
-
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                    </div>
                 </div>
 
             </div>

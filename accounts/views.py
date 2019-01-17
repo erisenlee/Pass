@@ -3,9 +3,25 @@ from django.contrib.auth import authenticate, login
 
 from django.http import HttpResponse
 from .forms import LoginForm
-
+from django.core.mail import EmailMessage
+from django.template.loader import get_template
+from django.core.signing import TimestampSigner
 
 # Create your views here.
+def send_mail(request,user):
+    subject = 'Import Info'
+
+    context = {
+        'host': request.host,
+        
+    }
+    html_content = get_template('accounts/message.html').render({'user':user})
+    fromemal = 'lm.liu@fengniaojx.com'
+    to = ['abnormalboy@126.com']
+    msg = EmailMessage(subject, html_content, fromemal, to)
+    msg.content_subtype = 'html'
+    msg.send()
+
 
 
 def log_in(request):
@@ -17,6 +33,7 @@ def log_in(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+                send_mail(user)
                 return HttpResponse('login success：{}'.format(user.username))
             else:
                 form.add_error('username','Please enter right account!')

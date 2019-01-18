@@ -1,16 +1,24 @@
 from django import forms
-
-
-class LoginForm(forms.Form):
+from django.contrib.auth import password_validation
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    UserCreationForm,
+)
+class LoginForm(AuthenticationForm):
     username = forms.CharField(label='Username', max_length=100, required=True,
-                               widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Your username'}))
-    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Your password'}), required=True)
+                               widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Your username','autofocus': True}))
+    password = forms.CharField(label='Password', strip=False,widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Your password'}), required=True)
 
 
-class RegisterForm(forms.Form):
-    username = forms.CharField(label='Username', max_length=100, required=True,
-                               widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Your username'}))
-    email = forms.EmailField(label='Email',required=True,widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':'Your email'}))
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Your password'}), required=True)
-    password2 = forms.CharField(label='Conform Password', widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Enter password again'}), required=True)
-    
+class RegisterForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        fields = ('username', 'email')
+        # field_classes = {'username': UsernameField}
+        widgets = {
+            'username': forms.TextInput(attrs={'class':'form-control'}),
+            'email': forms.EmailInput(attrs={'class':'form-control'}),
+            'password1': forms.PasswordInput(attrs={'class':'form-control'}),
+            'password2': forms.PasswordInput(attrs={'class':'form-control'}),
+        }
+
+  

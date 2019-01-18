@@ -1,9 +1,21 @@
 {% extends "accounts/base.html" %}
 {% block main %}
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title">hello, {{user.usernames}}</h4>
-        <p class="card-text">login success!</p>
+<div class="container">
+    <div class="card">
+        div.<div class="card">
+            <div class="card-header">
+                Header
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Hello, {{user.username}}</p>
+            </div>
+            <div class="card-footer text-muted">
+                Footer
+            </div>
+        </div>
+
     </div>
 </div>
+
 {% endblock main %}

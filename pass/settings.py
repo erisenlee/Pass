@@ -139,3 +139,6 @@ EMAIL_SUBJECT_PREFIX = 'Awesome'
 EMAIL_USE_SSL = True
 EMAIL_PORT = 465
 DEFAULT_FROM_EMAIL = 'lm.liu@fengniaojx.com'
+
+
+LOGIN_URL = 'accounts:log_in'

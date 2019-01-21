@@ -1,0 +1,36 @@
+{% extends 'awesome/base.html' %}
+{% block title %}
+{{ user.username }}
+{% endblock %}
+{% block main %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h4>Hello, {{ user.username }}</h4>
+        </div>
+        <div class="col-md-6">
+            {% if accounts %}
+                {% for account in accounts %}
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="card">
+                          <div class="card-body">
+                            <h4 class="card-title">{{ account.name }}</h4>
+                            <p class="card-text">{{ account.link }}</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                          </div>
+                        </div>
+                      </div>
+
+                {% endfor %}
+
+            {% endif %}
+        </div>
+        <div class="col-md-3">
+
+        </div>
+        </div>
+
+    </div>
+{% endblock %}

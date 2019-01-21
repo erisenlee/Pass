@@ -12,7 +12,7 @@ class LoginForm(AuthenticationForm):
 
 class RegisterForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        fields = ('username', 'email')
+        fields = ('username', 'email',)
         # field_classes = {'username': UsernameField}
         widgets = {
             'username': forms.TextInput(attrs={'class':'form-control'}),

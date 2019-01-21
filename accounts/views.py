@@ -8,8 +8,9 @@ from .forms import (
 )
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
-from django.core.signing import TimestampSigner
-
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User
 
 # Create your views here.
 def send_mail(subject,to,template,context):
@@ -18,14 +19,16 @@ def send_mail(subject,to,template,context):
     msg.content_subtype = 'html'
     msg.send()
 
-def check_link(request, sign_value):
-    signer = TimestampSigner()
-    value = signer.sign(sign_value)
-    from urllib.parse import urlencode,urlsplit,urlunsplit
-    query = urlencode({'token': value.split(':',maxsplit=1)[1]})
+def check_link(request, user):
+    
+    from urllib.parse import urlencode, urlsplit, urlunsplit
+    
+    query = urlencode({'token': default_token_generator.make_token(user),
+                        'user':user.username}
+                    )
     url_c = urlsplit(request.get_raw_uri())
 
-    return urlunsplit((url_c.scheme,url_c.netloc,url_c.path,query,'')) 
+    return urlunsplit((url_c.scheme,url_c.netloc,url_c.path+'check',query,'')) 
 
 
 def index(request):
@@ -55,7 +58,7 @@ def user_register(request):
             email = form.cleaned_data['email']
             send_mail('Active account', [email],
                     'accounts/base_message.html',
-                    {'link': check_link(request,email)}
+                    {'link': check_link(request,user)}
                     )
             return HttpResponse('go check email {}'.format(email))
         else:
@@ -64,5 +67,22 @@ def user_register(request):
         form = RegisterForm()
     return render(request, 'accounts/register.html', {'form': form})
     
-def active_account(request, token):
+def active_account(request):
+    if request.method == 'GET':
+        token = request.GET.get('token')
+        username = request.GET.get('user')
+        if token is None or username is None:
+            raise PermissionDenied
+        user = User.objects.get_by_natural_key(username)
+        if user is None:
+            raise PermissionDenied
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+
+            return redirect(reverse('accounts:log_in'))
+        else:
+            raise PermissionDenied
+    else:
+        return redirect(reverse('accounts:user_register'))
     

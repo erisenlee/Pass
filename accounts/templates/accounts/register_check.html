@@ -1,0 +1,12 @@
+{% extends "accounts/base.html" %}
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-{{class}}" role="alert">
+                <strong>{{message}}!</strong> <a href="{% url 'accounts:log_in' %}" class="alert-link">click to sign in</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main %}

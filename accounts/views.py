@@ -11,7 +11,7 @@ from django.template.loader import get_template
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
-
+from django.core.signing import dumps,loads
 
 # Create your views here.
 def send_mail(subject, to, template, context):
@@ -25,7 +25,7 @@ def check_link(request, user):
     from urllib.parse import urlencode, urlsplit, urlunsplit
 
     query = urlencode({'token': default_token_generator.make_token(user),
-                       'user': user.username}
+                       'user': dumps(user.username)}
                       )
     url_c = urlsplit(request.get_raw_uri())
 
@@ -76,7 +76,7 @@ def user_register(request):
 def active_account(request):
     if request.method == 'GET':
         token = request.GET.get('token')
-        username = request.GET.get('user')
+        username = loads(request.GET.get('user'))
         if token is None or username is None:
             raise PermissionDenied
         user = User.objects.get_by_natural_key(username)

@@ -4,30 +4,26 @@
 {% endblock %}
 {% block main %}
 
-    <div class="container border border-dark">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="page-header"><h2>Hello, {{ user.username }}</h2></div>
+    <div class="grid">
+        <div class="row flex-align-center">
+        <div class="cell-md-12">
+            <div data-role="appbar" data-expand-point="md">
+                <ul class="app-bar-menu">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contacts</a></li>
+                </ul>
             </div>
-            <div class="col-md-8">
-            {% if accounts %}
-                {% for account in accounts %}
-
-                    <div class="card border-top-0">
-                        <div class="card-body">
-                            <h4 class="card-title">{{ account.name }}</h4>
-                            <p class="card-text">{{ account.link }}</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-
-                {% endfor %}
-
-            {% endif %}
         </div>
-        </div>
-
     </div>
+        <div class="row flex-align-start">
+            <div class="cell-4">
+                <div data-size="large" data-role="tile"><span class="mif-github icon"></span></div>
+            </div>
+            <div class="cell-4">{% lorem %}</div>
+            <div class="colspan-4">{% lorem %}</div>
+        </div>
 
     </div>
 {% endblock %}

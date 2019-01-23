@@ -79,14 +79,27 @@ def active_account(request):
         username = loads(request.GET.get('user'))
         if token is None or username is None:
             raise PermissionDenied
-        user = User.objects.get_by_natural_key(username)
+        try:
+            user = User.objects.get_by_natural_key(username)
+        except Exception:
+            raise PermissionDenied
         if user is None:
             raise PermissionDenied
+        if user.is_active:
+            return render(
+                request,
+                'accounts/register_check.html',
+                {'class':'info','message':'Already activated'}
+            )
         if default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
 
-            return redirect(reverse('accounts:log_in'))
+            return render(
+                request,
+                'accounts/register_check.html',
+                {'class':'success','message':'Successfully activated'}
+            ) 
         else:
             raise PermissionDenied
     else:

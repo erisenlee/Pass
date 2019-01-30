@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'awesome',
     'accounts.apps.AccountsConfig',
     'captcha',
+    
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -149,5 +152,15 @@ LOGIN_URL = 'accounts:log_in'
 # CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 CAPTCHA_LENGTH = 5
 
+# Channels
+ASGI_APPLICATION = 'pass.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 django_heroku.settings(locals())

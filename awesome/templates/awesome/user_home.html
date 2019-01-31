@@ -3,27 +3,18 @@
     {{ user.username }}
 {% endblock %}
 {% block main %}
-
-    <div class="grid">
-        <div class="row flex-align-center">
-        <div class="cell-md-12">
-            <div data-role="appbar" data-expand-point="md">
-                <ul class="app-bar-menu">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Contacts</a></li>
-                </ul>
-            </div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>{{paginator.num_pages}}</h3>
+        <a href="{% url 'awesome:account_create' user.username %}">add</a>
+        <div class="list-group">
+            {% for account in page_obj.object_list %}
+                <a href="#" class="list-group-item list-group-item-action">{{account.name}}</a>
+            {% endfor %}            
+            
         </div>
+        
     </div>
-        <div class="row flex-align-start">
-            <div class="cell-4">
-                <div data-size="large" data-role="tile"><span class="mif-github icon"></span></div>
-            </div>
-            <div class="cell-4">{% lorem %}</div>
-            <div class="colspan-4">{% lorem %}</div>
-        </div>
-
-    </div>
+</div>
+   
 {% endblock %}

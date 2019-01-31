@@ -9,6 +9,7 @@
     <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
     <input id="chat-message-input" type="text" size="100"/><br/>
     <input id="chat-message-submit" type="button" value="Send"/>
+    <input id="chat-close" type="button" value="Close"/>
 </body>
 <script>
     var roomName = {{ room_name_json }};
@@ -17,10 +18,16 @@
         'ws://' + window.location.host +
         '/ws/chat/' + roomName + '/');
 
+    chatSocket.onopen = function(e){
+        document.querySelector('#chat-log').value += 'conenection start';
+    };
+
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
-        document.querySelector('#chat-log').value += (message + '\n');
+        var user = data['user'];
+        // var item = data['data'];
+        document.querySelector('#chat-log').value += ('\n'+user+':'+message + item+ '\n');
     };
 
     chatSocket.onclose = function(e) {
@@ -33,15 +40,20 @@
             document.querySelector('#chat-message-submit').click();
         }
     };
-
+    
     document.querySelector('#chat-message-submit').onclick = function(e) {
         var messageInputDom = document.querySelector('#chat-message-input');
         var message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
-            'message': message
+            'message': message,
         }));
 
         messageInputDom.value = '';
+    };
+    document.querySelector('#chat-close').onclick = function(e){
+        chatSocket.close();
+        document.querySelector('#chat-log').value += 'room closed';
+
     };
 </script>
 </html>

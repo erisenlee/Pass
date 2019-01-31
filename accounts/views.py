@@ -43,7 +43,7 @@ def log_in(request):
             user = form.get_user()
             login(request, user)
             # send_mail(user)
-            return redirect(reverse('accounts:awesome:user_home',args=(user.username,)))
+            return redirect('awesome:user_home',args=(user.username,))
         else:
             form.add_error('username', 'Please enter right account!')
     else:

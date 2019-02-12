@@ -20,10 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-!p^6&ar+t8fnemrt*nb3k5=89ah)ndyfm@3qd!g)%r_2d)rxk'
+# SECRET_KEY = '-!p^6&ar+t8fnemrt*nb3k5=89ah)ndyfm@3qd!g)%r_2d)rxk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '-!p^6&ar+t8fnemrt*nb3k5=89ah)ndyfm@3qd!g)%r_2d)rxk')
+DEBUG = bool( os.environ.get('DJANGO_DEBUG', True) )
 
 ALLOWED_HOSTS = []
 
@@ -31,7 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
+    # 'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +46,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'captcha',
     
-    'chat',
+    # 'chat',
 ]
 
 MIDDLEWARE = [
@@ -151,18 +153,18 @@ DEFAULT_FROM_EMAIL = 'lm.liu@fengniaojx.com'
 LOGIN_URL = 'accounts:log_in'
 
 # CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
-CAPTCHA_LENGTH = 2
+CAPTCHA_LENGTH = 4
 
 # Channels
-ASGI_APPLICATION = 'pass.routing.application'
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
+# ASGI_APPLICATION = 'pass.routing.application'
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('127.0.0.1', 6379)],
+#         },
+#     },
+# }
 
 #rest_framework
 REST_FRAMEWORK = {

@@ -7,7 +7,7 @@ from django.contrib.auth.forms import (
 from captcha.fields import CaptchaField,CaptchaTextInput
 
 
-class LoginForm(AuthenticationForm):
+class LoginForm(forms.Form):
     username = forms.CharField(label='Username', max_length=100, required=True,
                                widget=forms.TextInput(
                                    attrs={'class': 'form-control', 'placeholder': 'Your username', 'autofocus': True}))

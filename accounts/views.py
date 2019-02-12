@@ -38,14 +38,16 @@ def index(request):
 
 def log_in(request):
     if request.method == 'POST':
-        form = LoginForm(request, request.POST)
+        form = LoginForm(request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
+            cd = form.cleaned_data
+            user = authenticate(request, username=cd['username'], password=cd['password'])
+            if user:
+                login(request, user)
             # send_mail(user)
-            return redirect('awesome:user_home',args=(user.username,))
-        else:
-            form.add_error('username', 'Please enter right account!')
+                return redirect('awesome:user_home',username=user.username)
+            else:
+                form.add_error('username', 'Please enter right account!')
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})

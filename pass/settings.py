@@ -153,7 +153,7 @@ DEFAULT_FROM_EMAIL = 'lm.liu@fengniaojx.com'
 LOGIN_URL = 'accounts:log_in'
 
 # CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
-CAPTCHA_LENGTH = 4
+CAPTCHA_LENGTH = 2
 
 # Channels
 # ASGI_APPLICATION = 'pass.routing.application'

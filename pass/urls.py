@@ -28,6 +28,7 @@ urlpatterns = [
     path('chat/', include('chat.urls')),
     path('awesome/',include('awesome.urls')),
 ]
+
 urlpatterns += [
     path('captcha/', include('captcha.urls')),
 ]

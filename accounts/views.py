@@ -9,9 +9,9 @@ from .forms import (
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
-from django.core.signing import dumps,loads
+
+from .models import Token
 
 # Create your views here.
 def send_mail(subject, to, template, context):
@@ -22,14 +22,17 @@ def send_mail(subject, to, template, context):
 
 
 def check_link(request, user):
-    from urllib.parse import urlencode, urlsplit, urlunsplit
+    # from urllib.parse import urlencode, urlsplit, urlunsplit
+    token= Token(user=user)
+    token.save()
+    path = reverse('accounts:confirm_email', kwargs={"token": token.key})
+    url = request.build_absolute_uri(path)
+    return url
+    # query = urlencode({'token': token.key})
 
-    query = urlencode({'token': default_token_generator.make_token(user),
-                       'user': dumps(user.username)}
-                      )
-    url_c = urlsplit(request.get_raw_uri())
+    # url_c = urlsplit(request.get_raw_uri())
 
-    return urlunsplit((url_c.scheme, url_c.netloc, url_c.path + 'check', query, ''))
+    # return urlunsplit((url_c.scheme, url_c.netloc, url_c.path + 'check', query, ''))
 
 
 def index(request):
@@ -75,34 +78,38 @@ def user_register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 
-def active_account(request):
+def active_account(request,token):
     if request.method == 'GET':
-        token = request.GET.get('token')
-        username = loads(request.GET.get('user'))
-        if token is None or username is None:
+        key = token
+        if key is None:
             raise PermissionDenied
         try:
-            user = User.objects.get_by_natural_key(username)
+            token = Token.objects.select_related('user').get(key=key)
         except Exception:
             raise PermissionDenied
-        if user is None:
-            raise PermissionDenied
+        user = token.user
+        if not token.timevalid():
+            token.delete()
+            user.delete()
+            return render(
+                request,
+                'accounts/register_check.html',
+                {'class':'warning','message':'Invalid link'}
+            )
         if user.is_active:
             return render(
                 request,
                 'accounts/register_check.html',
                 {'class':'info','message':'Already activated'}
             )
-        if default_token_generator.check_token(user, token):
-            user.is_active = True
-            user.save()
+        
+        user.is_active = True
+        user.save()
 
-            return render(
-                request,
-                'accounts/register_check.html',
-                {'class':'success','message':'Successfully activated'}
-            ) 
-        else:
-            raise PermissionDenied
+        return render(
+            request,
+            'accounts/register_check.html',
+            {'class':'success','message':'Successfully activated'}
+        ) 
     else:
         return redirect(reverse('accounts:user_register'))

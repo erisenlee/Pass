@@ -166,6 +166,9 @@ CAPTCHA_LENGTH = 2
 #     },
 # }
 
+EMAIL_CHECK_TIMEOUT = 60*30
+
+
 #rest_framework
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

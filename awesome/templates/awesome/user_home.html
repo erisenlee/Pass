@@ -5,6 +5,7 @@
 {% block main %}
 <div class="row">
     <div class="col-md-12">
+        <a href="{% url 'awesome:dash_home' user.username %}">dash</a>
         <div class="list-group">
         {% for key,value in request.META.items %}
             <a href="#" class="list-group-item list-group-item-action list-group-item-primary">{{key}}:{{value}}</a>

@@ -1,15 +1,22 @@
+
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 # Create your views here.
-from django.views.generic import ListView,CreateView
+from django.views.generic import ListView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+
+
 from .forms import AccountForm
+from .utils import get_order
+
 
 def client_processor(request):
     context = {
         'ip_addr': request.META['REMOTE_ADDR'],
         'host_name': request.META['REMOTE_HOST'],
-        'extra' : 'processor'
+        'extra': 'processor'
     }
     return context
 
@@ -28,15 +35,25 @@ class AccountListView(ListView, LoginRequiredMixin):
         context['unsafe'] = " <script>alert('hello')</script>"
         return context
 
+
 class AccountCreateView(CreateView, LoginRequiredMixin):
     template_name = 'awesome/create.html'
     form_class = AccountForm
-    
 
 
 @login_required
-def user_home(request,username):
+def user_home(request, username):
     user = request.user
     accounts = user.account_set.all()
-    return render(request,'awesome/user_home.html',{'accounts':accounts})
+    return render(request, 'awesome/user_home.html', {'accounts': accounts})
 
+
+@login_required
+def dash_page(request, username):
+    return render(request, 'awesome/dash.html')
+
+
+@login_required
+def dash(request, username):
+    result = get_order(20)
+    return JsonResponse({'data': result})

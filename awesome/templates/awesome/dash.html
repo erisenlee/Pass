@@ -1,0 +1,25 @@
+{% extends "awesome/base.html" %}
+{% block main %}
+<p>Hi, {{user.username}}</p>
+<p id="display"> </p>
+{% endblock main %}
+{% block js %}
+<script>
+    window.onload = init;
+
+    function init() {
+        getData("{%url 'awesome:dash_order' user.username %}");
+    }
+
+
+    function getData(url) {
+        const tex = document.querySelector('#display');
+
+        let data = fetch(url).then(function (response) {
+             return response.json();
+          
+        });
+        console.log(data);
+    }
+</script>
+{% endblock js %}

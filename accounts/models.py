@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 # Create your models here.
 
+
 class Token(models.Model):
     """
     The default authorization token model.
@@ -38,4 +39,4 @@ class Token(models.Model):
         return False
 
     def __str__(self):
-        return self.key
+        return self.key        

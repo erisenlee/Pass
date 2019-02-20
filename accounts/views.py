@@ -9,7 +9,6 @@ from .forms import (
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.models import User
 
 from .models import Token
 
@@ -22,18 +21,11 @@ def send_mail(subject, to, template, context):
 
 
 def check_link(request, user):
-    # from urllib.parse import urlencode, urlsplit, urlunsplit
     token= Token(user=user)
     token.save()
     path = reverse('accounts:confirm_email', kwargs={"token": token.key})
     url = request.build_absolute_uri(path)
     return url
-    # query = urlencode({'token': token.key})
-
-    # url_c = urlsplit(request.get_raw_uri())
-
-    # return urlunsplit((url_c.scheme, url_c.netloc, url_c.path + 'check', query, ''))
-
 
 def index(request):
     return redirect(reverse('accounts:log_in'))
@@ -59,7 +51,6 @@ def log_in(request):
 def user_register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
-        # form = UserCreationForm(request.POST)
         if form.is_valid():
 
             user = form.save(commit=False)

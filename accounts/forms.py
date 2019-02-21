@@ -4,6 +4,7 @@ from django.contrib.auth.forms import (
     AuthenticationForm,
     UserCreationForm,
 )
+from django.conf import settings
 from captcha.fields import CaptchaField, CaptchaTextInput
 
 
@@ -13,8 +14,9 @@ class LoginForm(forms.Form):
                                    attrs={'class': 'form-control', 'placeholder': 'Your username', 'autofocus': True}))
     password = forms.CharField(label='Password', strip=False, widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Your password'}), required=True)
-    captcha = CaptchaField(widget=CaptchaTextInput(
-        attrs={'class': 'form-control'}))
+    if settings.CAPTCHA_ENABLE:
+        captcha = CaptchaField(widget=CaptchaTextInput(
+            attrs={'class': 'form-control'}))
 
 
 class RegisterForm(UserCreationForm):

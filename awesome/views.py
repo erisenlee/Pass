@@ -1,38 +1,31 @@
-
-
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 from django.views.generic import ListView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.utils import timezone
 
+from pyecharts import Line
 
 from .forms import AccountForm
 from .utils import get_order
+from .models import Account
 
 
-def client_processor(request):
-    context = {
-        'ip_addr': request.META['REMOTE_ADDR'],
-        'host_name': request.META['REMOTE_HOST'],
-        'extra': 'processor'
-    }
-    return context
-
-
-class AccountListView(ListView, LoginRequiredMixin):
+class AccountListView(ListView):
     template_name = 'awesome/user_home.html'
-    paginate_by = 3
-    context_object_name = 'account_list'
-    context_processors = [client_processor]
-
+    # paginate_by = 5
+    # context_object_name = 'account_list'
+    # context_processors = [client_processor]
+    # ordering = ''
+    
     def get_queryset(self):
         return self.request.user.account_set.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['unsafe'] = " <script>alert('hello')</script>"
+        context['username'] = self.kwargs['username']
         return context
 
 
@@ -42,18 +35,45 @@ class AccountCreateView(CreateView, LoginRequiredMixin):
 
 
 @login_required
-def user_home(request, username):
-    user = request.user
-    accounts = user.account_set.all()
-    return render(request, 'awesome/user_home.html', {'accounts': accounts})
-
-
-@login_required
 def dash_page(request, username):
-    return render(request, 'awesome/dash.html')
+    REMOTE_HOST = "https://pyecharts.github.io/assets/js"
+    line = linechart()
+    context = dict(
+        myechart=line.render_embed(),
+        host=REMOTE_HOST,
+        script_list=line.get_js_dependencies(),
+        email=request.user.email,
+    )
+    return render(request, 'awesome/dash.html', context)
 
 
 @login_required
 def dash(request, username):
-    result = get_order(20)
+    result = {day: value for day, value in get_order(15)}
     return JsonResponse({'data': result})
+
+
+def linechart():
+    result = {day: value for day, value in get_order(15)}
+    attr = list(result.keys())
+    v1 = list(result.values())
+    line = Line("折线图示例", title_pos='center',title_top='top')
+    line.add(
+        "Order", attr, v1,
+        is_smooth=True,
+        is_xaxislabel_align=True,
+        is_more_utils=True,
+        xaxis_name='Date',
+        xaxis_name_pos='end',
+        xaxis_name_gap=15,
+        yaxis_name='Number',
+        yaxis_name_pos='end',
+        yaxis_name_gap=15,
+        xaxis_interval=0,
+        xaxis_rotate=90,
+        legend_pos='right',
+        legend_top='top',
+        mark_line=["max", "average"]
+    )
+    return line
+

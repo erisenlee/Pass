@@ -1,25 +1,37 @@
 {% extends "awesome/base.html" %}
+{% block head%}
+{% for jsfile_name in script_list %}
+<script src="{{ host }}/{{ jsfile_name }}.js"></script>
+{% endfor %}
+{% endblock head %}
 {% block main %}
-<p>Hi, {{user.username}}</p>
-<p id="display"> </p>
+<p>Hi, {{user.username}} {{email}}</p>
+<ul>
+    {% for object in object_list %}
+        <li>{{object.name}}</li>
+    {% empty %}
+        <p>no data</p>
+    {% endfor %}
+</ul>
+<!-- {{myechart|safe}} -->
 {% endblock main %}
 {% block js %}
 <script>
-    window.onload = init;
+    // window.onload = init;
 
-    function init() {
-        getData("{%url 'awesome:dash_order' user.username %}");
-    }
+    // function init() {
+    {% comment %} //     getData("{%url 'awesome:dash_order' user.username %}"); {% endcomment %}
+    // }
 
 
-    function getData(url) {
-        const tex = document.querySelector('#display');
+    // function getData(url) {
+    //     const tex = document.querySelector('#display');
 
-        let data = fetch(url).then(function (response) {
-             return response.json();
+    //     let data = fetch(url).then(function (response) {
+    //          return response.json();
           
-        });
-        console.log(data);
-    }
+    //     });
+    //     console.log(data);
+    // }
 </script>
 {% endblock js %}

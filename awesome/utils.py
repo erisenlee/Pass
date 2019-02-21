@@ -116,7 +116,7 @@ class Client:
 
 
 def fetch(c, day):
-    url = 'http://fns.livejx.cn/fns/waybill/waybillList?beginFinishTime={} 00:00:00&endFinishTime={} 23:59:59&rows=0'.format(
+    url = 'http://nc.fengniaojx.com/fns/waybill/waybillList?beginFinishTime={} 00:00:00&endFinishTime={} 23:59:59&rows=0'.format(
         day, day)
     return c.post(url=url)
 
@@ -126,10 +126,10 @@ def get_order_count(days):
     today = date.today()
     gen_date = (today - timedelta(days=i) for i in range(1, days+1))
     dates = [DateFormat(date_g).format('Y-m-d') for date_g in gen_date]
-    url = 'http://fns.livejx.cn/fns/waybill/waybillList?beginFinishTime={} 00:00:00&endFinishTime={} 23:59:59&rows=0'
+    url = 'http://nc.fengniaojx.com/fns/waybill/waybillList?beginFinishTime={} 00:00:00&endFinishTime={} 23:59:59&rows=0'
     gen_urls = (url.format(day, day) for day in dates)
 
-    host = 'http://fns.livejx.cn'
+    host = 'nc.fengniaojx.com'
     c = Client(host, 'admin', 'abcd1234')
     result = []
     with ThreadPoolExecutor() as executor:
@@ -145,7 +145,7 @@ def get_order(days):
     today = date.today()
     gen_date = (today - timedelta(days=i) for i in range(1, days + 1))
     dates = [DateFormat(date_g).format('Y-m-d') for date_g in gen_date]
-    host = 'http://fns.livejx.cn'
+    host = 'nc.fengniaojx.com'
     c = Client(host, 'admin', 'abcd1234')
     result = []
     with ThreadPoolExecutor() as executor:
@@ -161,7 +161,7 @@ def get_order(days):
 
 
 if __name__ == "__main__":
-    result = get_order(20)
-    # result = get_order_count(20)
+    # result = get_order(20)
+    result = get_order_count(20)
 
     print(result)

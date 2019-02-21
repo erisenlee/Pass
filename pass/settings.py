@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'django.contrib.postgres',
-    'rest_framework',
+    # 'rest_framework',
     'awesome',
     'accounts.apps.AccountsConfig',
     'captcha',
@@ -114,7 +114,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+# session config
+SESSION_COOKIE_AGE = 3600*24*7
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
@@ -153,6 +154,7 @@ DEFAULT_FROM_EMAIL = 'lm.liu@fengniaojx.com'
 LOGIN_URL = 'accounts:log_in'
 
 # CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+CAPTCHA_ENABLE = False
 CAPTCHA_LENGTH = 2
 
 # Channels

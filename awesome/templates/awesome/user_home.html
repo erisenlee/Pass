@@ -1,27 +1,11 @@
-{% extends 'awesome/base.html' %}
+{% extends "awesome/base.html" %}
 {% block title %}
-    {{ user.username }}
-{% endblock %}
+{{user.username}} | Home
+{% endblock title %}
 {% block main %}
-<div class="row">
-    <div class="col-md-12">
-        <a href="{% url 'awesome:dash_home' user.username %}">dash</a>
-        <div class="list-group">
-        {% for key,value in request.META.items %}
-            <a href="#" class="list-group-item list-group-item-action list-group-item-primary">{{key}}:{{value}}</a>
-
-        {% endfor %}
-        </div>
-        
-        <a href="{% url 'awesome:account_create' user.username %}">add</a>
-        <div class="list-group">
-            {% for account in page_obj.object_list %}
-                <a href="#" class="list-group-item list-group-item-action">{{account.name}}</a>
-            {% endfor %}            
-            
-        </div>
-        
-    </div>
-</div>
-   
-{% endblock %}
+{% for account in object_list %}
+    <li>{{account.name}}</li>
+{% empty %}
+<p>no data</p>
+{% endfor %}
+{% endblock main %}

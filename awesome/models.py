@@ -33,10 +33,7 @@ class Account(BaseInfoModel):
         'info', max_length=255, null=True, blank=True)
     is_active = models.BooleanField('is_active', default=True)
     tags = models.ManyToManyField('Tag')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    # active_manager = AccountManager()
-    objects = models.Manager()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  
 
     class Meta(BaseInfoModel.Meta):
         indexes = [

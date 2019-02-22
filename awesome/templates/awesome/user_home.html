@@ -3,6 +3,7 @@
 {{user.username}} | Home
 {% endblock title %}
 {% block main %}
+<a href="{% url 'awesome:dash_home' user.username %}">More</a>
 {% for account in object_list %}
     <li>{{account.name}}</li>
 {% empty %}

@@ -53,8 +53,15 @@ def timethis(func):
     return wrapper
 
 
+def get_cookie(login_url, auth):
+    resp = requests.post(login_url, data=auth)
+    cookie = resp.request.headers['Cookie']
+    cookie_dict = {k: v for k, v in [tuple(cookie.split('='))]}
+    return cookie_dict
+
+
 class Client:
-    def __init__(self, host, username, password, login_endpoint=None):
+    def __init__(self, host, username, password, login_endpoint=None, cookie=True):
         self.host = host if host.startswith('http') else 'http://' + host
         if not login_endpoint:
             login_endpoint = 'fns/login'
@@ -62,7 +69,20 @@ class Client:
         self.username = username
         self.password = password
         self.login_status = False
-        self.session = requests.Session()
+        # self.cookie = get_cookie(self.login, dict(
+        #     username=self.username, password=self.password))
+        if not cookie:
+            self.session = requests.Session()
+
+    def raw_get(self, url, cookie):
+        resp = requests.get(url, cookies=cookie)
+        if resp.status_code == 200:
+            return resp.json()
+
+    def raw_post(self, url, cookie):
+        resp = requests.post(url, cookies=cookie)
+        if resp.status_code == 200:
+            return resp.json()
 
     def login(self):
         # print(self.login_url)
@@ -131,9 +151,12 @@ def get_order_count(days):
 
     host = 'nc.fengniaojx.com'
     c = Client(host, 'admin', 'abcd1234')
+    cookie = get_cookie(c.login_url, dict(
+        username=c.username, password=c.password))
     result = []
     with ThreadPoolExecutor() as executor:
-        future_to_url = {executor.submit(c.post, url=url): url for url in gen_urls}
+        future_to_url = {executor.submit(
+            c.raw_post, url, cookie): url for url in gen_urls}
         for future in as_completed(future_to_url):
             data = future.result()['total']
             result.append(data)

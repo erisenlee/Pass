@@ -57,7 +57,7 @@ def linechart():
     result = {day: value for day, value in get_order(15)}
     attr = list(result.keys())
     v1 = list(result.values())
-    line = Line("折线图示例", title_pos='center',title_top='top')
+    line = Line("Options of data", title_pos='center',title_top='top')
     line.add(
         "Order", attr, v1,
         is_smooth=True,

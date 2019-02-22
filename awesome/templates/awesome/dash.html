@@ -5,15 +5,9 @@
 {% endfor %}
 {% endblock head %}
 {% block main %}
-<p>Hi, {{user.username}} {{email}}</p>
-<ul>
-    {% for object in object_list %}
-        <li>{{object.name}}</li>
-    {% empty %}
-        <p>no data</p>
-    {% endfor %}
-</ul>
-<!-- {{myechart|safe}} -->
+<p>Hi, {{user.username}}</p>
+<hr>
+{{myechart|safe}}
 {% endblock main %}
 {% block js %}
 <script>

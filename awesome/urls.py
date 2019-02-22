@@ -10,7 +10,7 @@ urlpatterns = [
     # path('<str:username>/create/',
     #      views.AccountCreateView.as_view(), name='account_create'),
     
-    # path('<str:username>/dash/', views.dash_page, name='dash_home'),
+    path('<str:username>/dash/', views.dash_page, name='dash_home'),
     
 
 

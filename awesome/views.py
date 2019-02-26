@@ -27,7 +27,7 @@ class AccountListView(ListView):
         context = super().get_context_data(**kwargs)
         context['username'] = self.kwargs['username']
         return context
-
+    
 
 class AccountCreateView(CreateView, LoginRequiredMixin):
     template_name = 'awesome/create.html'

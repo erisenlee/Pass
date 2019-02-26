@@ -1,10 +1,11 @@
-from concurrent.futures import as_completed, ThreadPoolExecutor
-import requests
+import aiohttp
+import asyncio
 from urllib.parse import urljoin
 from datetime import date, timedelta
 from django.utils.dateformat import DateFormat
 import time
-from functools import wraps
+import requests
+from functools import wraps, partial
 
 
 class Timer:
@@ -53,22 +54,15 @@ def timethis(func):
     return wrapper
 
 
-@timethis
-def get_cookie(login_url, auth):
-    resp = requests.post(login_url, data=auth)
-    cookie = resp.request.headers['Cookie']
-    cookie_dict = {k: v for k, v in [tuple(cookie.split('='))]}
-    return cookie_dict
-
-
 class Client:
+    """docstring for Client."""
+
     def __init__(self, host, username, password, login_endpoint=None, cookie=None):
         self.host = host if host.startswith('http') else 'http://' + host
         if not login_endpoint:
             login_endpoint = 'fns/login'
         self.login_url = urljoin(self.host, login_endpoint)
         self.auth = dict(username=username, password=password)
-        self.login_status = False
         if not cookie:
             self.cookie = self.get_cookie(self.login_url, self.auth)
         else:
@@ -87,47 +81,57 @@ class Client:
     def url_join(self, path):
         return urljoin(self.host, path)
 
-    def raw_get(self, path):
-        url = self.url_join(path)
-        resp = requests.get(url, cookies=self.cookie)
-        if resp.status_code == 200:
-            return resp.json()
-
-    def raw_post(self, path):
-        url = self.url_join(path)
-        resp = requests.post(url, cookies=self.cookie)
-        if resp.status_code == 200:
-            return resp.json()
-
-
-def fetch(c, day):
-    url = 'fns/waybill/waybillList?beginFinishTime={} 00:00:00&endFinishTime={} 23:59:59&rows=0'.format(
-        day, day)
-    return c.raw_post(url)
-
 
 @timethis
-def get_order(days, host):
+async def login(c):
+    async with aiohttp.ClientSession() as session:
+        async with session.post(c.login_url, data=c.auth) as resp:
+            async with resp:
+                assert resp.status == 200
+                cookie_str = resp.request_info.headers.get('cookie')
+                return {k: v for k, v in [tuple(cookie_str.split('='))]}
+
+
+async def fetch(method, session, url, cookies):
+    async with session.request(method, url, cookies=cookies) as resp:
+        return await resp.json()
+
+
+async def get_order(days, c):
     today = date.today()
     gen_date = (today - timedelta(days=i) for i in range(1, days + 1))
     dates = [DateFormat(date_g).format('Y-m-d') for date_g in gen_date]
-    c = Client(host, 'admin', 'abcd1234')
-    result = []
-    with ThreadPoolExecutor() as executor:
-        future_to_url = {executor.submit(
-            fetch, c, day): day for day in dates}
-        future_map = as_completed(future_to_url)
-        for future in future_map:
-            data = future.result()['total']
-            day = future_to_url[future]
-            result.append((day, data))
-    result.sort()
-    return result
+    path = 'fns/waybill/waybillList?beginFinishTime={} 00:00:00&endFinishTime={} 23:59:59&rows=0'
+    urls = [path.format(day, day) for day in dates]
+    async with aiohttp.ClientSession() as session:
+        tasks = []
+        for key, url in enumerate(urls):
+
+            task = asyncio.create_task(
+                fetch('POST', session, c.url_join(url), c.cookie))
+            task.add_done_callback(partial(callback, key=key))
+            tasks.append(task)
+        futures, _ = await asyncio.wait(tasks)
+        results = []
+        for f in futures:
+            data = f.result()
+            results.append(data)
+        return results
+
+
+def callback(future, key=None):
+    result = future.result()
+    result['key'] = key
+
+
+@timethis
+def main():
+    c = Client('fns.livejx.cn', 'admin', 'abcd1234')
+    loop = asyncio.get_event_loop()
+    # result = loop.run_until_complete(login(c))
+    result = loop.run_until_complete(get_order(50, c))
+    print(result)
 
 
 if __name__ == "__main__":
-    # result = get_order(20)
-    host = 'http://fns.livejx.cn'
-    result = get_order(50, host)
-
-    print(result)
+    main()

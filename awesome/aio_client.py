@@ -129,8 +129,8 @@ def main():
     c = Client('fns.livejx.cn', 'admin', 'abcd1234')
     loop = asyncio.get_event_loop()
     # result = loop.run_until_complete(login(c))
-    result = loop.run_until_complete(get_order(50, c))
-    print(result)
+    result = loop.run_until_complete(get_order(10, c))
+    return result
 
 
 if __name__ == "__main__":

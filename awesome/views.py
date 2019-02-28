@@ -32,6 +32,7 @@ class AccountListView(ListView):
 class AccountCreateView(CreateView, LoginRequiredMixin):
     template_name = 'awesome/create.html'
     form_class = AccountForm
+    context_object_name = 'account_form'
 
 
 @login_required
@@ -54,7 +55,8 @@ def dash(request, username):
 
 
 def linechart():
-    result = {day: value for day, value in get_order(15)}
+    host = 'http://fns.livejx.cn'
+    result = {day: value for day, value in get_order(15, host)}
     attr = list(result.keys())
     v1 = list(result.values())
     line = Line("Options of data", title_pos='center',title_top='top')

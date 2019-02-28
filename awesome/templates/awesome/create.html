@@ -1,8 +1,8 @@
 {% extends "awesome/base.html" %}
+{% load crispy_forms_tags %}
 {% block main %}
 <form action="{% url 'awesome:account_create' user.username %}" method="post">
-{% csrf_token %}
-{{form.as_p}}
-<button type="button" class="btn btn-primary">submit</button>
+{% crispy form %}
+{% comment %} <button type="button" class="btn btn-primary">submit</button> {% endcomment %}
 </form>
 {% endblock main %}

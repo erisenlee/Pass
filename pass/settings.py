@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
     # 'django.contrib.postgres',
     # 'rest_framework',
     'awesome',
     'accounts.apps.AccountsConfig',
+    'awesome_api',
     'captcha',
     
     # 'chat',
@@ -176,5 +178,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 django_heroku.settings(locals())

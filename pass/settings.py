@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'django_celery_results',
     # 'django.contrib.postgres',
     # 'rest_framework',
     'awesome',
@@ -159,17 +160,6 @@ LOGIN_URL = 'accounts:log_in'
 CAPTCHA_ENABLE = False
 CAPTCHA_LENGTH = 2
 
-# Channels
-# ASGI_APPLICATION = 'pass.routing.application'
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": [('127.0.0.1', 6379)],
-#         },
-#     },
-# }
-
 EMAIL_CHECK_TIMEOUT = 60*30
 
 
@@ -180,5 +170,11 @@ REST_FRAMEWORK = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+#celery config
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'django-db'
 
 django_heroku.settings(locals())

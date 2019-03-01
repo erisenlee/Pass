@@ -126,7 +126,7 @@ class Task(BaseInfoModel):
     task_no = models.CharField(
         '任务编号', max_length=255, default=generate_no_with_datetime('TASK'), editable=False)
     task_name = models.CharField('任务名称', max_length=255)
-    task_remak = models.CharField('备注', max_length=255)
+    task_remak = models.CharField('备注', max_length=255, blank=True)
     task_start_time = models.DateTimeField('开始时间')
     task_stop_time = models.DateTimeField('结束时间')
 

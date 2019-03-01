@@ -3,11 +3,24 @@
 {{user.username}} | Home
 {% endblock title %}
 {% block main %}
-<a href="{% url 'awesome:dash_home' user.username %}">More</a> 
+<a href="{% url 'awesome:dash_home' user.username %}">More</a>
+<button class="btn-primary">Run</button>
 <a href="{% url 'awesome:account_create' user.username %}">Create</a>
+<a href="{% url 'awesome:run_tasks' user.username %}">Run</a>
+<a href="{% url 'awesome_api:run_tasks' user.username %}">Run Task</a>
 {% for account in object_list %}
     <li>{{account.name}}</li>
 {% empty %}
 <p>no data</p>
 {% endfor %}
 {% endblock main %}
+<script>
+    const btn = document.querySelector('button');
+    btn.onclick = function () {
+        let data = fetch("{% url 'awesome:run_tasks' user.username %}").then(function (response) {
+              return response.json();
+
+         });
+        console.log(data);
+    }
+</script>

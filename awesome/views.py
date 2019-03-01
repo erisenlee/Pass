@@ -79,3 +79,10 @@ def linechart():
     )
     return line
 
+
+@login_required
+def run_tasks(request, username):
+    from awesome.utils import get_order_task
+    host = 'fns.livejx.cn'
+    result = get_order_task(10, host)
+    return JsonResponse(result, safe=False)

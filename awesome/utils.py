@@ -5,6 +5,7 @@ from datetime import date, timedelta
 from django.utils.dateformat import DateFormat
 import time
 from functools import wraps
+from awesome.tasks import fetch_task
 
 
 class Timer:
@@ -125,9 +126,25 @@ def get_order(days, host):
     return result
 
 
+def get_order_task(days, host):
+    today = date.today()
+    gen_date = (today - timedelta(days=i) for i in range(1, days + 1))
+    dates = [DateFormat(date_g).format('Y-m-d') for date_g in gen_date]
+    c = Client(host, 'admin', 'abcd1234')
+    cookies = c.cookie
+    task = fetch_task.s(cookies=cookies)
+    result = []
+    for day in dates:
+        path = 'fns/waybill/waybillList?beginFinishTime={} 00:00:00&endFinishTime={} 23:59:59&rows=0'.format(
+            day, day)
+        url = c.url_join(path)
+        resp = task.delay(url).get()
+        result.append(resp)
+    return result
+ 
 if __name__ == "__main__":
     # result = get_order(20)
     host = 'http://fns.livejx.cn'
-    result = get_order(50, host)
+    get_order_task(10, host)
 
-    print(result)
+    # print(result)

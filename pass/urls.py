@@ -27,6 +27,8 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('chat/', include('chat.urls')),
     path('awesome/',include('awesome.urls')),
+    path('awesome_api/',include('awesome_api.urls')),
+
 ]
 
 urlpatterns += [

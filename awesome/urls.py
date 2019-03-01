@@ -11,6 +11,7 @@ urlpatterns = [
          views.AccountCreateView.as_view(), name='account_create'),
 
     path('<str:username>/dash/', views.dash_page, name='dash_home'),
+    path('<str:username>/run/', views.run_tasks, name='run_tasks'),
 
 
 

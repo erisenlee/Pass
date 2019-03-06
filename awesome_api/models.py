@@ -68,22 +68,19 @@ class Module(BaseInfoModel):
 
 class TestCase(BaseInfoModel):
     case_no = models.CharField(
-        '用例编号', max_length=255, default=generate_no_with_datetime('CASE'), editable=False)
+        '用例编号', max_length=255, default=generate_no_with_datetime('CASE'))
     case_name = models.CharField('用例名称', max_length=255)
     case_description = models.TextField('用例描述', blank=True)
     case_method = models.CharField('请求方式', choices=METHODS, max_length=6)
     case_path = models.CharField('请求路径', max_length=255)
-    case_headers = models.CharField('请求头', max_length=512, blank=True)
-    case_params = models.CharField('请求参数', max_length=512, blank=True)
+    case_headers = JsonField('请求头', blank=True)
+    case_params = JsonField('请求参数', blank=True)
     case_body = models.CharField('请求内容', max_length=512, blank=True)
     case_assert = models.CharField('断言', max_length=255, blank=True)
     case_module = models.ForeignKey(Module, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.case_name
-
-    def case_no_generate(self):
-        pass
 
 
 class Environment(BaseInfoModel):
@@ -124,11 +121,11 @@ class EmailContent(BaseInfoModel):
 
 class Task(BaseInfoModel):
     task_no = models.CharField(
-        '任务编号', max_length=255, default=generate_no_with_datetime('TASK'), editable=False)
+        '任务编号', max_length=255, default=generate_no_with_datetime('TASK'))
     task_name = models.CharField('任务名称', max_length=255)
     task_remak = models.CharField('备注', max_length=255, blank=True)
-    task_start_time = models.DateTimeField('开始时间')
-    task_stop_time = models.DateTimeField('结束时间')
+    task_start_time = models.DateTimeField('开始时间', blank=True)
+    task_stop_time = models.DateTimeField('结束时间', blank=True)
 
     task_env = models.ForeignKey(Environment, on_delete=models.CASCADE)
     task_cases = models.ManyToManyField(TestCase)
@@ -137,4 +134,14 @@ class Task(BaseInfoModel):
         return self.task_name
 
 
+class TaskResult(BaseInfoModel):
+    task_no = models.CharField('任务编号', max_length=255,)
+    case_no = models.CharField('用例编号', max_length=255,)
+    start_time = models.DateTimeField('开始时间')
+    stop_time = models.DateTimeField('结束时间')
+    status_code = models.CharField('返回状态码', max_length=10)
+    content_type = models.CharField('content type', max_length=128)
+    response = models.TextField('返回结果', null=True, default=None)
 
+    def __str__(self):
+        return '<Task: {0.task_no} ({0.case_no})>'.format(self)

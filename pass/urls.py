@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-# from rest_framework import routers
-# from awesome_api import views
+from rest_framework import routers
+from rest_framework.authtoken import views
+from awesome_api.views import TestViewSet
 
-# router = routers.DefaultRouter()
-# router.register(r'users', views.UserViewSet)
+router = routers.DefaultRouter()
+router.register(r'testcase', TestViewSet)
 # router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
@@ -35,8 +36,9 @@ urlpatterns += [
     path('captcha/', include('captcha.urls')),
 ]
 
-# urlpatterns += [
-#     path('api/',include(router.urls)),
-#     path('api-auth/', include('rest_framework.urls',namespace='rest_framework')),
-# ]
+urlpatterns += [
+    path('api/',include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-token-auth/', views.obtain_auth_token)
+]
 

@@ -1,14 +1,9 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import serializers
+from . models import TestCase
 
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class TestCaseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'groups')
+        model = TestCase
+        exclude = ['case_module']
 
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ('url', 'name')

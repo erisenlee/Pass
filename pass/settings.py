@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'django_celery_results',
-    # 'django.contrib.postgres',
-    # 'rest_framework',
+    'rest_framework',
+    'rest_framework.authtoken',
     'awesome',
     'accounts.apps.AccountsConfig',
     'awesome_api',
@@ -165,6 +165,7 @@ EMAIL_CHECK_TIMEOUT = 60*30
 
 #rest_framework
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }

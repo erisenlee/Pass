@@ -9,28 +9,23 @@
 
         {% endblock %}</title>
     <link rel="icon" type="image/png" href="{% static 'accounts/images/favicon.png' %}">
-    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="{% static 'awesome/css/metro-all.min.css' %}">
-    <script src="{% static 'awesome/js/metro.min.js' %}"></script>
+    <script src="{% static 'awesome/js/jquery.min.js' %}"></script>
+    <script src="{% static 'awesome/js/popper.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'awesome/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
-
-{#    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">#}
-{##}
-
-{##}
-{#    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>#}
-{##}
-{#    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>#}
-    {% block css %}
+    <script src="{% static 'awesome/js/bootstrap.min.js' %}"></script>
+    {% block head %}
 
     {% endblock %}
 </head>
 
 <body>
+    {% include "awesome/header.html" %}
     <div class="container">
         {% block main %}
 
         {% endblock %}
     </div>
+    {% include "awesome/footer.html" %}
 </body>
 </html>

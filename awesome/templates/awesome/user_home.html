@@ -3,27 +3,27 @@
     {{ user.username }}
 {% endblock %}
 {% block main %}
-
-    <div class="grid">
-        <div class="row flex-align-center">
-        <div class="cell-md-12">
-            <div data-role="appbar" data-expand-point="md">
-                <ul class="app-bar-menu">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Contacts</a></li>
-                </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1 class="display-3">Jumbo heading</h1>
+                <p class="lead">Jumbo helper text</p>
+                <hr class="my-2">
+                <p>More info</p>
+                <p class="lead">
+                    <a class="btn btn-primary btn-lg text-decoration-none" href="#" role="button">Jumbo action name</a>
+                </p>
             </div>
+            <ul>
+                {% for account in accounts %}
+                    <li>{{account.name}}</li>
+            {% empty %}
+                
+            {% endfor %}
+            </ul>
+            
         </div>
     </div>
-        <div class="row flex-align-start">
-            <div class="cell-4">
-                <div data-size="large" data-role="tile"><span class="mif-github icon"></span></div>
-            </div>
-            <div class="cell-4">{% lorem %}</div>
-            <div class="colspan-4">{% lorem %}</div>
-        </div>
-
-    </div>
+</div>   
 {% endblock %}
